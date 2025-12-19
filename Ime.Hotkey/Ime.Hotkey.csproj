@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<AssemblyTitle>IME Hotkey</AssemblyTitle>
+		<Product>IME Hotkey</Product>
+		<Description>IME Hotkey</Description>
+	</PropertyGroup>
+
+</Project>
