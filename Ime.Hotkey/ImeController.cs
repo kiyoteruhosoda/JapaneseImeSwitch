@@ -1,4 +1,5 @@
 ﻿using Ime.Hotkey;
+using System.Runtime.InteropServices;
 
 namespace Ime.Core;
 
@@ -7,19 +8,28 @@ public static class ImeController
     static IntPtr _hklJapanese = NativeMethods.LoadKeyboardLayout(NativeMethods.JAJP_KLID, NativeMethods.KLF_NON_ACTIVATE);
     static IntPtr _hklEnglish = NativeMethods.LoadKeyboardLayout(NativeMethods.ENUS_KLID, NativeMethods.KLF_NON_ACTIVATE);
 
-    public static nint RequestJapanese()
+    public static async Task<nint> RequestJapaneseAsync()
     {
         var hWnd = Switch(_hklEnglish);
-        hWnd = Switch(_hklJapanese);
+        if (hWnd == 0) return 0;
+
+        await Task.Delay(30);
+
+        Switch(_hklJapanese);
+        await Task.Delay(30);
+
         SwitchJapaneseHiragana(hWnd);
+        await Task.Delay(20);
 
         return hWnd;
     }
 
-    public static nint RequestEnglish()
+    public static async Task<nint> RequestEnglishAsync()
     {
-        return Switch(_hklEnglish);
+        var hWnd = Switch(_hklEnglish);
+        return hWnd;
     }
+
 
     public static void SwitchJapaneseHiragana(nint hWnd)
     {

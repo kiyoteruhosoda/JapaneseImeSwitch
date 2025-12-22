@@ -59,28 +59,32 @@ public sealed class HotKeyWindow : NativeWindow, IDisposable
     /// </summary>
     private void OnHotKeyPressed(HotKeyId hotKeyId)
     {
-        try
+        _ = hotKeyId switch
         {
-            switch (hotKeyId)
-            {
-                case HotKeyId.Japanese:
-                    ImeController.RequestJapanese();
-                    break;
-
-                case HotKeyId.English:
-                    ImeController.RequestEnglish();
-                    break;
-
-                default:
-                    throw new InvalidOperationException("Unknown HotKeyId");
-            }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.ToString(), "IME HotKey Error");
-        }
+            HotKeyId.Japanese => HandleJapaneseAsync(),
+            HotKeyId.English => HandleEnglishAsync(),
+            _ => Task.CompletedTask
+        };
     }
 
+    private async Task HandleJapaneseAsync()
+    {
+        await ImeController.RequestJapaneseAsync();
+        await Task.Delay(30);
+        ShowOverlay("あ");
+    }
+
+    private async Task HandleEnglishAsync()
+    {
+        await ImeController.RequestEnglishAsync();
+        ShowOverlay("A");
+    }
+
+    private void ShowOverlay(string text)
+    {
+        var form = new ImeOverlayForm(text);
+        form.Show();
+    }
 
     /// <summary>
     /// ホットキー解除

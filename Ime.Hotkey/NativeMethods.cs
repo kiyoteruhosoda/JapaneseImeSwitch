@@ -18,7 +18,6 @@ public static class NativeMethods
     public const int WM_INPUTLANGCHANGEREQUEST = 0x0050;
 
 
-
     // 変換モード
     public const int IME_CMODE_NATIVE = 0x0001;   // 日本語入力
     public const int IME_CMODE_FULLSHAPE = 0x0008; // 全角
