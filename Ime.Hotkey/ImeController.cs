@@ -1,12 +1,11 @@
-﻿using Ime.Hotkey;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
-namespace Ime.Core;
+namespace Ime.Hotkey;
 
 public static class ImeController
 {
-    static IntPtr _hklJapanese = NativeMethods.LoadKeyboardLayout(NativeMethods.JAJP_KLID, NativeMethods.KLF_NON_ACTIVATE);
-    static IntPtr _hklEnglish = NativeMethods.LoadKeyboardLayout(NativeMethods.ENUS_KLID, NativeMethods.KLF_NON_ACTIVATE);
+    static readonly IntPtr _hklJapanese = NativeMethods.LoadKeyboardLayout(NativeMethods.JAJP_KLID, NativeMethods.KLF_NON_ACTIVATE);
+    static readonly IntPtr _hklEnglish = NativeMethods.LoadKeyboardLayout(NativeMethods.ENUS_KLID, NativeMethods.KLF_NON_ACTIVATE);
 
     public static async Task<nint> RequestJapaneseAsync()
     {

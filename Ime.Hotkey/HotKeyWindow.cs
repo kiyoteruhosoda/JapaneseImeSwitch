@@ -1,16 +1,25 @@
-﻿using Ime.Core;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Ime.Hotkey;
 
 public sealed class HotKeyWindow : NativeWindow, IDisposable
 {
     private bool _disposed;
+    private bool _hotKeysRegistered;
 
     public HotKeyWindow()
     {
         // 非表示ウィンドウを作成
         CreateHandle(new CreateParams());
+        RegisterHotKeys();
+    }
+
+    private void RegisterHotKeys()
+    {
+        if (_hotKeysRegistered)
+        {
+            UnregisterHotKeys();
+        }
 
         bool success = NativeMethods.RegisterHotKey(
             Handle,
@@ -22,9 +31,8 @@ public sealed class HotKeyWindow : NativeWindow, IDisposable
         {
             int error = Marshal.GetLastWin32Error();
             throw new InvalidOperationException(
-                $"RegisterHotKey failed. Win32Error={error}");
+                $"RegisterHotKey (Japanese) failed. Win32Error={error}");
         }
-
 
         success = NativeMethods.RegisterHotKey(
             Handle,
@@ -36,8 +44,19 @@ public sealed class HotKeyWindow : NativeWindow, IDisposable
         {
             int error = Marshal.GetLastWin32Error();
             throw new InvalidOperationException(
-                $"RegisterHotKey failed. Win32Error={error}");
+                $"RegisterHotKey (English) failed. Win32Error={error}");
         }
+
+        _hotKeysRegistered = true;
+    }
+
+    private void UnregisterHotKeys()
+    {
+        if (!_hotKeysRegistered) return;
+
+        NativeMethods.UnregisterHotKey(Handle, (int)HotKeyId.Japanese);
+        NativeMethods.UnregisterHotKey(Handle, (int)HotKeyId.English);
+        _hotKeysRegistered = false;
     }
 
     /// <summary>
@@ -96,8 +115,7 @@ public sealed class HotKeyWindow : NativeWindow, IDisposable
             return;
         }
 
-        NativeMethods.UnregisterHotKey(Handle, (int)HotKeyId.Japanese);
-        NativeMethods.UnregisterHotKey(Handle, (int)HotKeyId.English);
+        UnregisterHotKeys();
 
         DestroyHandle();
         _disposed = true;
